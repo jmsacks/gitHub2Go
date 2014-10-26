@@ -21,7 +21,11 @@ class Repro {
             self.name = reproInfo["full_name"] as String
             self.url = reproInfo["html_url"] as String
             self.ID = reproInfo["id"] as Int
-            self.description = reproInfo["description"] as String
+        if let descript = reproInfo["descripition"] as? String {
+            self.description = descript }
+        else {
+            self.description = ""
+        }
             self.updateDate = reproInfo ["updated_at"] as String
         
     }

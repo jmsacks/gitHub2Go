@@ -1,4 +1,4 @@
-//
+ //
 //  UserCollectionViewViewController.swift
 //  GithubToGo
 //
@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import QuartzCore
 
-class UserCollectionViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate {
+class UserCollectionViewViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchBarDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     var users : [Users]?
+    var origin: CGRect?
+    var userToDisplay : Users?
     
 
     override func viewDidLoad() {
@@ -20,17 +23,19 @@ class UserCollectionViewViewController: UIViewController, UICollectionViewDataSo
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
         self.searchBar.delegate = self
-        NetworkController.sharedInstance.searchGitHubUsers ("test", completionHandler: { (errorDescription, results) -> (Void) in
-            if errorDescription != nil {
-                //alert the user that something went wrong
-                println("something went wrong")
-            } else {
-                self.users = results
-                println(self.users?.count)
-                println(self.users?.first?.name)
-                self.collectionView.reloadData()
-            }})
-        
+//        NetworkController.sharedInstance.searchGitHubUsers ("test", completionHandler: { (errorDescription, results) -> (Void) in
+//            if errorDescription != nil {
+//                //alert the user that something went wrong
+//                println("something went wrong")
+//            } else {
+//                self.users = results
+//                println(self.users?.count)
+//                println(self.users?.first?.name)
+//                self.collectionView.reloadData()
+//            }})
+       println("The delegate is: \(self.navigationController?.delegate)")
+       self.navigationController?.delegate = self
+       // self.navigationController?.delegate =
         // Do any additional setup after loading the view.
     }
 
@@ -50,40 +55,67 @@ class UserCollectionViewViewController: UIViewController, UICollectionViewDataSo
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("USER_CELL", forIndexPath: indexPath) as UserCollectionViewCell
-        //cell.backgroundColor = UIColor.purpleColor()
+        
+        cell.profileImage.image = UIImage (named: "questionMark.png")
+        var currentTag = cell.tag + 1
+        cell.tag = currentTag
         let thisUser = self.users?[indexPath.row]
         cell.profileImage.image = self.users?[indexPath.row].profileImage
         cell.profileName.text = self.users?[indexPath.row].name
         NetworkController.sharedInstance.getImageFromURL(thisUser!, completionHandler: { (image) -> Void in
+            if cell.tag == currentTag {
             cell.profileImage.image = thisUser?.profileImage
-        })
+            }
+            })
         return cell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let singleUserView=self.storyboard?.instantiateViewControllerWithIdentifier("userDetailView") as UserDetailViewController
-        var userToDisplay = self.users![indexPath.row]
+        userToDisplay = self.users![indexPath.row]
         singleUserView.userShown = userToDisplay
-        self.navigationController?.pushViewController(singleUserView, animated: true)
+        let attributes = collectionView.layoutAttributesForItemAtIndexPath(indexPath)
+        let origin = self.view.convertRect(attributes!.frame, fromView: collectionView)
+        self.origin = origin
+        let image = userToDisplay!.profileImage
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        singleUserView.reverseOrigin = self.origin!
+        
+        
+        //println("The delegate is: \(self.navigationController?.delegate)")
+        //self.navigationController?.delegate = self
+        self.navigationController!.pushViewController(singleUserView, animated: true)
+    }
+    
+        func navigationController(UINavigationController, animationControllerForOperation operation: UINavigationControllerOperation, fromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+            if let userCollectionViewViewController = fromVC as? UserCollectionViewViewController {
+                if let userDetailViewController = toVC as? UserDetailViewController{
+                    let animator = ShowImageAnimator()
+                    animator.origin = self.origin
+                    return animator
+                } }
+            return nil
+        }
+   
+  //MARK: SearchBar
+    
+    func searchBar(searchBar: UISearchBar,
+        shouldChangeTextInRange range: NSRange,
+        replacementText text: String) -> Bool {
+            println(text)
+            return text.validate()
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }*/
+func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    // self.activityIndicator.startAnimating()
+    println("SEARCHING!")
+    NetworkController.sharedInstance.searchGitHubUsers(searchBar.text, completionHandler: { (errorDescription, results) -> (Void) in
+        self.users = results
+        //  self.activityIndicator.stopAnimating()
+        self.collectionView.reloadData()
+    })
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-       // self.activityIndicator.startAnimating()
-        println("SEARCHING!")
-        NetworkController.sharedInstance.searchGitHubUsers(searchBar.text, completionHandler: { (errorDescription, results) -> (Void) in
-            self.users = results
-          //  self.activityIndicator.stopAnimating()
-            self.collectionView.reloadData()
-            searchBar.resignFirstResponder()
-        })
-
-    } }
+    searchBar.resignFirstResponder()
+    
+    }
+}

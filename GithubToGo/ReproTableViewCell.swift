@@ -9,7 +9,9 @@
 import UIKit
 
 class ReproTableViewCell: UITableViewCell {
+    @IBOutlet weak var descripition: UILabel!
 
+    @IBOutlet weak var updateDate: UILabel!
     @IBOutlet weak var name: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -10,24 +10,36 @@
 	<string>GithubToGo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>681B947448CD3FBCE7A9FBEE474915AB192A5B39</key>
+		<string>https://github.com/jmsacks/gitHub2Go.git</string>
 		<key>D315C12DB03D12006668E1D308B7A709FBB06F04</key>
 		<string>https://github.com/codefellows/sea-b23-iOS.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>GithubToGo/GithubToGo.xcodeproj</string>
+	<string>GithubToGo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>681B947448CD3FBCE7A9FBEE474915AB192A5B39</key>
+		<string>../..</string>
 		<key>D315C12DB03D12006668E1D308B7A709FBB06F04</key>
-		<string>../../..</string>
+		<string>../../../sea-b23-iOS</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/codefellows/sea-b23-iOS.git</string>
+	<string>https://github.com/jmsacks/gitHub2Go.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D315C12DB03D12006668E1D308B7A709FBB06F04</string>
+	<string>681B947448CD3FBCE7A9FBEE474915AB192A5B39</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>681B947448CD3FBCE7A9FBEE474915AB192A5B39</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GitHub2Go</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

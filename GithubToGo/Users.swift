@@ -16,6 +16,7 @@ class Users {
     var avitarURL : String
     var profileImage : UIImage
     var previouslyDownloadedImage : Int
+    var repos_URL : String
     
     init (userInfo : NSDictionary) {
         self.name = userInfo["login"] as String
@@ -24,6 +25,7 @@ class Users {
         self.avitarURL = userInfo["avatar_url"] as String
         self.profileImage = UIImage (named: "questionMark.png")
         self.previouslyDownloadedImage = 0
+        self.repos_URL = userInfo["repos_url"] as String
     }
     
     

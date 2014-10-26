@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReproViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
+class ReproViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate, UITableViewDelegate {
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
@@ -20,17 +20,19 @@ class ReproViewController: UIViewController, UITableViewDataSource, UISearchBarD
         super.viewDidLoad()
         self.tableView.dataSource = self
         self.searchBar.delegate = self
+        self.tableView.delegate = self
          
-        NetworkController.sharedInstance.searchGitHubRepo ("test", completionHandler: { (errorDescription, results) -> (Void) in
-            if errorDescription != nil {
-                //alert the user that something went wrong
-                println("something went wrong")
-            } else {
-                self.repros = results
-                println(self.repros?.count)
-                println(self.repros?.first?.name)
-                self.tableView.reloadData()
-            }})
+//        NetworkController.sharedInstance.searchGitHubRepo ("test", completionHandler: { (errorDescription, results) -> (Void) in
+//            if errorDescription != nil {
+//                //alert the user that something went wrong
+//                println("something went wrong")
+//            } else {
+//                println("GotBack")
+//                self.repros = results
+//                println(self.repros?.count)
+//                println(self.repros?.first?.name)
+//                self.tableView.reloadData()
+//            }})
 
         // Do any additional setup after loading the view.
     }
@@ -50,8 +52,19 @@ class ReproViewController: UIViewController, UITableViewDataSource, UISearchBarD
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("REPO_CELL") as ReproTableViewCell
         cell.name.text = self.repros![indexPath.row].name
+        cell.descripition.text = self.repros![indexPath.row].description
+        cell.updateDate.text = self.repros![indexPath.row].updateDate
         println(cell.name.text)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        println("Should go to webview")
+        let repoWebView = self.storyboard?.instantiateViewControllerWithIdentifier("webView") as WebViewController
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        repoWebView.destinationURL = self.repros![indexPath.row].url
+        self.navigationController?.pushViewController(repoWebView, animated: true)
+        
     }
 
     /*
@@ -76,5 +89,16 @@ class ReproViewController: UIViewController, UITableViewDataSource, UISearchBarD
         
         
     }
+    
+    func searchBar(searchBar: UISearchBar,
+        shouldChangeTextInRange range: NSRange,
+        replacementText text: String) -> Bool {
+            println(text)
+            return text.validate()
+    }
 
+    
+    
+    
+    
 }

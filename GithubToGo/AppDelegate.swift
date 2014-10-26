@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             println("OAUTH Token isn't Set")
         }
+        
+
         return true
     }
     
@@ -55,7 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
     }
-
+    
+    
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {
